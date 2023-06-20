@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stacked Area Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="chartA"></canvas>
+    <canvas id="chartB"></canvas>
+    <canvas id="chartC"></canvas>
+
+    <script>
+        fetch('/api/data')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data[0].data.map((_, i) => i + 1);
+
+                data.forEach(item => {
+                    const ctx = document.getElementById(`chart${item.label.toUpperCase()}`).getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: item.label,
+                                data: item.data,
+                                fill: true,
+                                backgroundColor: item.backgroundColor
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    display: true
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+    </script>
+</body>
+</html>
